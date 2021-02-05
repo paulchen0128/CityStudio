@@ -47,6 +47,7 @@ def convert_b(array):
 
     writer.save()
 
+
 if __name__ == "__main__":
     get_apis(api_array)
     for url in api_array:
