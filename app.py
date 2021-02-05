@@ -19,29 +19,24 @@ def get_apis(array):
     f = open(api,'r')
     file = list(f)
     for line in file:
-        line = line[32:-5]
+        line = line[:-1]
         api_array.append(line)
 
 # Gets JSON from each API and puts it into api_array
 def get_json(api_url):
-    results = client.get(api_url)
-    json_array.append(results)
-    print(type(results))
+    r = requests.get(api_url)
+    json_dict = r.json()
+    json_array.append(json_dict)
 
 # Takes json and creates excel
-def convert(array):
-    with open('out.xlsv') as outfile:
-        for row_num, data in enumerate(array):
-            writer = csv,writer(outfile)
-            writer.writerows(data.iteritems())
-        
-
-# Takes json and creates excel (CURRENTLY BROKEN) 
-def convert_b(array):
-    with xlsxwriter.Workbook('test4.xlsx') as workbook:
-        worksheet = workbook.add_worksheet()
-        for row_num, data in enumerate(array):
-            worksheet.write_row(row_num, 0, data)
+def convert(json_dict):
+    # file_name = str(str(counter)+ '.xlsx')
+    file_name = input('Enter file name: ')
+    file_name = file_name + '.xlsx'
+    df = pd.DataFrame(json_dict)
+    writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
 
 if __name__ == "__main__":
     get_apis(api_array)

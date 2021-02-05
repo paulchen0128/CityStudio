@@ -1,1 +1,3 @@
 https://data.sfgov.org/resource/yitu-d5am.json
+https://data.sfgov.org/resource/rqzj-sfat.json
+https://data.sfgov.org/resource/vcwn-f2xk.json
