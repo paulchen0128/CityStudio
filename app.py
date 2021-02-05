@@ -38,14 +38,18 @@ def convert(array):
 
 # Takes json and creates excel (CURRENTLY BROKEN) 
 def convert_b(array):
-    with xlsxwriter.Workbook('test4.xlsx') as workbook:
-        worksheet = workbook.add_worksheet()
-        for row_num, data in enumerate(array):
-            worksheet.write_row(row_num, 0, data)
+
+    df = pd.DataFrame(array)
+
+    writer = pd.ExcelWriter('pandas_simple2.xlsx', engine='xlsxwriter')
+
+    df.to_excel(writer, sheet_name='Sheet1')
+
+    writer.save()
 
 if __name__ == "__main__":
     get_apis(api_array)
     for url in api_array:
         get_json(url)
     for json in json_array:
-        convert(json)
+        convert_b(json)
