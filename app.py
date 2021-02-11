@@ -11,8 +11,6 @@ import csv
 api = 'record.txt'
 # Array of API, name of metric and parsecode
 api_array = []
-# Array of JSON entries
-json_array = []
 
 client = Socrata("data.sfgov.org", None)
 
