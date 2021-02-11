@@ -22,6 +22,7 @@ def get_apis(array):
     file = list(f)
     for line in file:
         line_split = line.split(',')
+        line_split[3] = line_split[3].rstrip('\n')
         api_array.append(line_split)
         
 
@@ -31,8 +32,7 @@ def get_apis(array):
 def get_value(api):
     r = requests.get(api[0])
     data = r.json()
-    parsecode = remove_quotes(api[2])
-    value = eval(parsecode)
+    value = eval(api[2])
     city = api[3]
     metric_name = api[1]
     return value, metric_name, city

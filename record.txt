@@ -1,1 +1,3 @@
+https://data.seattle.gov/resource/3th6-ticf.json,total GHG emissions in tonnes,sum(float(d['totalghgemissions']) for d in data),Seattle
 https://data.cityofnewyork.us/resource/yg3y-7juh.json?$limit=9999999,% of unclean business,1-(len([entry for entry in data if entry["overall_condition"] == "A"])/len(data)),New York City
+https://data.ny.gov/resource/erjw-j2zx.json,Annual Energy Efficiency Reports (EER) completed,len([i for i in data if i['year_completed']=="2020"]),New York City
