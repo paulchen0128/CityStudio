@@ -34,5 +34,23 @@
         "date_parse_code": "",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/4yue-vjfc.json",
+        "metric_name": "Number of bridges with rating above 5",
+        "city": "New York City",
+        "metric_parse_code": "sum((float(d['current_rating']) > 5) for d in data)",
+        "date_parse_code": "",
+        "cov_dimesion_id": "1181",
+        "cov_metric_name": "% of Major Road Network (MRN) rated good or above"
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/fc53-9hrv.json?$limit=9999999",
+        "metric_name": "Number of NYC EV Fleet vehciles",
+        "city": "New York City",
+        "metric_parse_code": "len(data)",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
     }
     ]
