@@ -106,5 +106,50 @@
         "date_parse_code": "",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://gisdata.seattle.gov/server/rest/services/SDOT/SDOT_Bikes/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=json",
+        "metric_name": "Bicycle lane miles installed",
+        "city": "Seattle",
+        "metric_parse_code": "sum(i['attributes']['LENGTH_MILES'] for i in data['features'])",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/h9gi-nx95.json",
+        "metric_name": "The total number of pedestrian, motorist, bicyclist, and passenger deaths resulting from traffic crashes.",
+        "city":"New York City",
+        "metric_parse_code": "sum(int(i['number_of_persons_killed']) + int(i['number_of_pedestrians_killed']) + int(i['number_of_cyclist_killed']) + int(i['number_of_motorist_killed']) for i in data)",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.calgary.ca/resource/nhg7-bmw5.json",
+        "metric_name": "% of Paved Lane Km where the Condition is Rated as Good to Very Good",
+        "city": "Calgary",
+        "metric_parse_code": "sum(int(i['asset_condition_rated']) for i in data)/ len(data)",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/gjkm-nzmg.json",
+        "metric_name": "# Streets maintained with a pavement rating of - Good (%)",
+        "city": "New York City",
+        "metric_parse_code": "len([i['rating_word'] for i in data if i['rating_word'] == 'GOOD'])/ len(data)",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.calgary.ca/resource/2msm-bgzt.json",
+        "metric_name": "Pedestrian fatalities (# of injuries)",
+        "city": "Calgary",
+        "metric_parse_code": "sum([int(entry['count']) for entry in data if 'count' in entry.keys()])",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
     }
 ]
