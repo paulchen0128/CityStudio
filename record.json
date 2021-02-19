@@ -70,5 +70,41 @@
         "date_parse_code": "",
         "cov_dimesion_id": "1186",
         "cov_metric_name": "Kilometer of total bike network"
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
+        "metric_name": "Electric vehicles in the citywide fleet",
+        "city": "New York City",
+        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Electric vehicles in the citywide\" in entry[\"performance_indicator\"])",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
+        "metric_name": "Citi Bike annual membership",
+        "city": "New York City",
+        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Citi Bike\" in entry[\"performance_indicator\"])+' USD'",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
+        "metric_name": "Total design projects completed early/on time (%)",
+        "city": "New York City",
+        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Total design projects\" in entry[\"performance_indicator\"])",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
+        "metric_name": "Total construction projects completed early/on time (%)",
+        "city": "New York City",
+        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Total construction projects\" in entry[\"performance_indicator\"])",
+        "date_parse_code": "",
+        "cov_dimesion_id": "",
+        "cov_metric_name": ""
     }
-    ]
+]
