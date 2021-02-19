@@ -52,5 +52,24 @@
         "date_parse_code": "",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=9999999",
+        "metric_name": "Environmental & Safety Management",
+        "city": "Calgary",
+        "metric_parse_code": "sum(float(i['tonnes_co2e'])for i in data)",
+        "date_parse_code": "",
+        "cov_dimesion_id": "1548",
+        "cov_metric_name": "Greenhouse gas emissions from City – used Buildings (tonnes CO2e)"
+
+    },
+    {
+        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=9999999",
+        "metric_name": "% reduction in building energy emissions",
+        "city": "Seattle",
+        "metric_parse_code": "sum(float(i['totalghgemissions'])for i in data if i['epapropertytype'] == 'K-12 School')",
+        "date_parse_code": "",
+        "cov_dimesion_id": "3054",
+        "cov_metric_name": "% reduction of total tonnes of greenhouse gas emmissions from City-owned buildings (since 2007)"
     }
     ]
