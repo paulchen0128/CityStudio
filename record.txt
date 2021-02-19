@@ -1,1 +1,0 @@
-https://data.cityofnewyork.us/resource/yg3y-7juh.json?$limit=9999999,% of unclean business,1-(len([entry for entry in data if entry["overall_condition"] == "A"])/len(data)),New York City
