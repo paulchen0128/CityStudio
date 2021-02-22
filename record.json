@@ -5,7 +5,7 @@
         "city": "Seattle",
         "metric_parse_code": "sum(float(d['totalghgemissions']) for d in data)",
         "date_parse_code": "",
-        "cov_dimesion_id": "",
+        "cov_dimension_id": "",
         "cov_metric_name": ""
     },
     {
@@ -14,7 +14,7 @@
         "city": "New York City",
         "metric_parse_code": "(1-(len([entry for entry in data if entry['overall_condition'] == 'A'])/len(data)))",
         "date_parse_code": "",
-        "cov_dimesion_id": "",
+        "cov_dimension_id": "",
         "cov_metric_name": ""
     },
     {
@@ -23,7 +23,7 @@
         "city": "New York City",
         "metric_parse_code": "len([i for i in data if i['year_completed']=='2020'])",
         "date_parse_code": "",
-        "cov_dimesion_id": "",
+        "cov_dimension_id": "",
         "cov_metric_name": ""
     },
     {
@@ -32,7 +32,7 @@
         "city": "Calgary",
         "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
         "date_parse_code": "",
-        "cov_dimesion_id": "",
+        "cov_dimension_id": "",
         "cov_metric_name": ""
     },
     {
@@ -41,7 +41,7 @@
         "city": "New York City",
         "metric_parse_code": "sum((float(d['current_rating']) > 5) for d in data)",
         "date_parse_code": "",
-        "cov_dimesion_id": "1181",
+        "cov_dimension_id": "1181",
         "cov_metric_name": "% of Major Road Network (MRN) rated good or above"
     },
     {
@@ -50,16 +50,16 @@
         "city": "New York City",
         "metric_parse_code": "len(data)",
         "date_parse_code": "",
-        "cov_dimesion_id": "",
+        "cov_dimension_id": "",
         "cov_metric_name": ""
     },
     {
         "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=9999999",
         "metric_name": "Environmental & Safety Management",
         "city": "Calgary",
-        "metric_parse_code": "sum(float(i['tonnes_co2e'])for i in data)",
+        "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
         "date_parse_code": "",
-        "cov_dimesion_id": "1548",
+        "cov_dimension_id": "1548",
         "cov_metric_name": "Greenhouse gas emissions from City – used Buildings (tonnes CO2e)"
 
     },
@@ -69,7 +69,7 @@
         "city": "Seattle",
         "metric_parse_code": "sum(float(i['totalghgemissions'])for i in data if i['epapropertytype'] == 'K-12 School')",
         "date_parse_code": "",
-        "cov_dimesion_id": "3054",
+        "cov_dimension_id": "3054",
         "cov_metric_name": "% reduction of total tonnes of greenhouse gas emmissions from City-owned buildings (since 2007)"
     }
     ]
