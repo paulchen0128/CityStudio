@@ -46,7 +46,7 @@
     },
     {
         "api_endpoint": "https://data.cityofnewyork.us/resource/fc53-9hrv.json?$limit=9999999",
-        "metric_name": "Number of NYC EV Fleet vehciles",
+        "metric_name": "Number of NYC EV Fleet vehicles",
         "city": "New York City",
         "metric_parse_code": "len(data)",
         "date_parse_code": "",

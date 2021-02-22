@@ -42,7 +42,7 @@ def get_data_from_single_entry(single_entry):
             'City': single_entry["city"],
             'Metric Value': metric_value,
             'Date': date_value,
-            'CoV Dimension ID': single_entry["cov_dimesion_id"] if single_entry["cov_dimesion_id"] != "" else "-", # if the value is "", assigns "-"
+            'CoV Dimension ID': single_entry["cov_dimension_id"] if single_entry["cov_dimension_id"] != "" else "-", # if the value is "", assigns "-"
             'CoV Metric Name' : single_entry["cov_metric_name"] if single_entry["cov_metric_name"] != "" else "-", # if the value is "", assigns "-"
             'API Endpoint': single_entry["api_endpoint"]
     }
