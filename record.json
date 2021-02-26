@@ -1,10 +1,10 @@
 [
     {
-        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json",
+        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=9999999",
         "metric_name": "total GHG emissions in tonnes",
         "city": "Seattle",
         "metric_parse_code": "sum(float(d['totalghgemissions']) for d in data)",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(max([entry['datayear'] for entry in data]))",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -13,7 +13,7 @@
         "metric_name": "% of unclean business",
         "city": "New York City",
         "metric_parse_code": "(1-(len([entry for entry in data if entry['overall_condition'] == 'A'])/len(data)))",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min([entry['inspection_year'] for entry in data if entry['overall_condition'] == 'A']))+ ' ~ '+ ''.join(max([entry['inspection_year'] for entry in data if entry['overall_condition'] == 'A']))",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -22,7 +22,7 @@
         "metric_name": "Annual Energy Efficiency Reports (EER) completed",
         "city": "New York City",
         "metric_parse_code": "len([i for i in data if i['year_completed']=='2020'])",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(max([i['date_completed'] for i in data if i['year_completed']=='2020']))",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -40,7 +40,7 @@
         "metric_name": "Number of bridges with rating above 5",
         "city": "New York City",
         "metric_parse_code": "sum((float(d['current_rating']) > 5) for d in data)",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min([d['inspection_date'] for d in data if float(d['current_rating']) > 5]) + ' ~ ' + max([d['inspection_date'] for d in data if float(d['current_rating']) > 5]))",
         "cov_dimesion_id": "1181",
         "cov_metric_name": "% of Major Road Network (MRN) rated good or above"
     },
@@ -67,7 +67,7 @@
         "metric_name": "Total kilometers of cycling routes",
         "city": "New York City",
         "metric_parse_code": "round(sum(float(entry['length_in_']) for entry in data)*1.60934, 2)",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min([entry['open_date'] for entry in data])+' ~ '+max([entry['open_date'] for entry in data]))",
         "cov_dimesion_id": "1186",
         "cov_metric_name": "Kilometer of total bike network"
     },
@@ -75,8 +75,8 @@
         "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
         "metric_name": "Electric vehicles in the citywide fleet",
         "city": "New York City",
-        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Electric vehicles in the citywide\" in entry[\"performance_indicator\"])",
-        "date_parse_code": "",
+        "metric_parse_code": "''.join(entry['fy20'] for entry in data if 'Electric vehicles in the citywide' in entry['performance_indicator'])",
+        "date_parse_code": "''.join('2020' for entry in data if 'Electric vehicles in the citywide' in entry['performance_indicator'] and entry['fy20'] is not None)",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -84,8 +84,8 @@
         "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
         "metric_name": "Citi Bike annual membership",
         "city": "New York City",
-        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Citi Bike\" in entry[\"performance_indicator\"])+' USD'",
-        "date_parse_code": "",
+        "metric_parse_code": "''.join(entry['fy20'] for entry in data if 'Citi Bike' in entry['performance_indicator'])+' USD'",
+        "date_parse_code": "''.join('2020' for entry in data if 'Citi Bike' in entry['performance_indicator'] and entry['fy20'] is not None)",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -93,8 +93,8 @@
         "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
         "metric_name": "Total design projects completed early/on time (%)",
         "city": "New York City",
-        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Total design projects\" in entry[\"performance_indicator\"])",
-        "date_parse_code": "",
+        "metric_parse_code": "''.join(entry['fy20'] for entry in data if 'Total design projects' in entry['performance_indicator'])",
+        "date_parse_code": "''.join('2020' for entry in data if 'Total design projects' in entry['performance_indicator'] and entry['fy20'] is not None)",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -102,8 +102,8 @@
         "api_endpoint": "https://data.cityofnewyork.us/resource/qe3p-6ugh.json?$limit=9999999",
         "metric_name": "Total construction projects completed early/on time (%)",
         "city": "New York City",
-        "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Total construction projects\" in entry[\"performance_indicator\"])",
-        "date_parse_code": "",
+        "metric_parse_code": "''.join(entry['fy20'] for entry in data if 'Total construction projects' in entry['performance_indicator'])",
+        "date_parse_code": "''.join('2020' for entry in data if 'Total construction projects' in entry['performance_indicator'] and entry['fy20'] is not None)",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -121,7 +121,7 @@
         "metric_name": "The total number of pedestrian, motorist, bicyclist, and passenger deaths resulting from traffic crashes.",
         "city":"New York City",
         "metric_parse_code": "sum(int(i['number_of_persons_killed']) + int(i['number_of_pedestrians_killed']) + int(i['number_of_cyclist_killed']) + int(i['number_of_motorist_killed']) for i in data)",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min([i['crash_date'] for i in data if i['number_of_persons_killed']]) + ' ~ ' +max([i['crash_date'] for i in data if i['number_of_persons_killed']]))",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -130,7 +130,7 @@
         "metric_name": "% of Paved Lane Km where the Condition is Rated as Good to Very Good",
         "city": "Calgary",
         "metric_parse_code": "sum(int(i['asset_condition_rated']) for i in data)/ len(data)",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min(i['date'] for i in data) + ' ~ ' +max(i['date'] for i in data))",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -148,7 +148,7 @@
         "metric_name": "Pedestrian fatalities (# of injuries)",
         "city": "Calgary",
         "metric_parse_code": "sum([int(entry['count']) for entry in data if 'count' in entry.keys()])",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min(i['year'] for i in data) + ' ~ ' +max(i['year'] for i in data))",
         "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
@@ -162,21 +162,20 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=9999999",
+        "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=99999",
         "metric_name": "Environmental & Safety Management",
         "city": "Calgary",
         "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min([d['year'] for d in data if 'tonnes_co2e' in d.keys()]) + ' ~ ' +max([d['year'] for d in data if 'tonnes_co2e' in d.keys()]))",
         "cov_dimesion_id": "1548",
         "cov_metric_name": "Greenhouse gas emissions from City – used Buildings (tonnes CO2e)"
-    
     },
     {
-        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=9999999",
+        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=99999",
         "metric_name": "% reduction in building energy emissions",
         "city": "Seattle",
         "metric_parse_code": "sum(float(i['totalghgemissions'])for i in data if i['epapropertytype'] == 'K-12 School')",
-        "date_parse_code": "",
+        "date_parse_code": "''.join(min([d['datayear'] for d in data if d['epapropertytype'] == 'K-12 School']) + ' ~ ' +max([d['datayear'] for d in data if d['epapropertytype'] == 'K-12 School']))",
         "cov_dimesion_id": "3054",
         "cov_metric_name": "% reduction of total tonnes of greenhouse gas emmissions from City-owned buildings (since 2007)"
     }
