@@ -182,15 +182,6 @@
     },
     {
         "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "test",
-        "city": "Seattle",
-        "metric_parse_code": "sum(i for i in data['Year Created'] == 2006)",
-        "date_parse_code": "",
-        "cov_dimesion_id": "",
-        "cov_metric_name": "test"
-    },
-    {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
         "metric_name": "Total Litres of Fuel Consumed per 100 Km (Light Duty Vehicles)",
         "city": "Toronto",
         "metric_parse_code": "float(data['Result'][168])",
