@@ -5,7 +5,7 @@
         "city": "Seattle",
         "metric_parse_code": "sum(float(d['totalghgemissions']) for d in data)",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -14,7 +14,7 @@
         "city": "New York City",
         "metric_parse_code": "(1-(len([entry for entry in data if entry['overall_condition'] == 'A'])/len(data)))",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -23,7 +23,7 @@
         "city": "New York City",
         "metric_parse_code": "len([i for i in data if i['year_completed']=='2020'])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -32,7 +32,7 @@
         "city": "Calgary",
         "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -41,16 +41,16 @@
         "city": "New York City",
         "metric_parse_code": "sum((float(d['current_rating']) > 5) for d in data)",
         "date_parse_code": "",
-        "cov_dimension_id": "1181",
+        "cov_dimesion_id": "1181",
         "cov_metric_name": "% of Major Road Network (MRN) rated good or above"
     },
     {
         "api_endpoint": "https://data.cityofnewyork.us/resource/fc53-9hrv.json?$limit=9999999",
-        "metric_name": "Number of NYC EV Fleet vehicles",
+        "metric_name": "Number of NYC EV Fleet vehciles",
         "city": "New York City",
         "metric_parse_code": "len(data)",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -59,7 +59,7 @@
         "city": "Seattle",
         "metric_parse_code": "len([entry for entry in data if entry['statuscurrent'] == 'Issued'])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -68,7 +68,7 @@
         "city": "New York City",
         "metric_parse_code": "round(sum(float(entry['length_in_']) for entry in data)*1.60934, 2)",
         "date_parse_code": "",
-        "cov_dimension_id": "1186",
+        "cov_dimesion_id": "1186",
         "cov_metric_name": "Kilometer of total bike network"
     },
     {
@@ -77,7 +77,7 @@
         "city": "New York City",
         "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Electric vehicles in the citywide\" in entry[\"performance_indicator\"])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -86,7 +86,7 @@
         "city": "New York City",
         "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Citi Bike\" in entry[\"performance_indicator\"])+' USD'",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -95,7 +95,7 @@
         "city": "New York City",
         "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Total design projects\" in entry[\"performance_indicator\"])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -104,7 +104,7 @@
         "city": "New York City",
         "metric_parse_code": "' '.join(entry[\"fy20\"] for entry in data if \"Total construction projects\" in entry[\"performance_indicator\"])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -113,7 +113,7 @@
         "city": "Seattle",
         "metric_parse_code": "sum(i['attributes']['LENGTH_MILES'] for i in data['features'])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -122,7 +122,7 @@
         "city":"New York City",
         "metric_parse_code": "sum(int(i['number_of_persons_killed']) + int(i['number_of_pedestrians_killed']) + int(i['number_of_cyclist_killed']) + int(i['number_of_motorist_killed']) for i in data)",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -131,7 +131,7 @@
         "city": "Calgary",
         "metric_parse_code": "sum(int(i['asset_condition_rated']) for i in data)/ len(data)",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -140,7 +140,7 @@
         "city": "New York City",
         "metric_parse_code": "len([i['rating_word'] for i in data if i['rating_word'] == 'GOOD'])/ len(data)",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -149,7 +149,7 @@
         "city": "Calgary",
         "metric_parse_code": "sum([int(entry['count']) for entry in data if 'count' in entry.keys()])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -158,7 +158,7 @@
         "city": "New York City",
         "metric_parse_code": "len(data)",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
@@ -167,9 +167,9 @@
         "city": "Calgary",
         "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
         "date_parse_code": "",
-        "cov_dimension_id": "1548",
+        "cov_dimesion_id": "1548",
         "cov_metric_name": "Greenhouse gas emissions from City – used Buildings (tonnes CO2e)"
-
+    
     },
     {
         "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=9999999",
@@ -177,43 +177,34 @@
         "city": "Seattle",
         "metric_parse_code": "sum(float(i['totalghgemissions'])for i in data if i['epapropertytype'] == 'K-12 School')",
         "date_parse_code": "",
-        "cov_dimension_id": "3054",
+        "cov_dimesion_id": "3054",
         "cov_metric_name": "% reduction of total tonnes of greenhouse gas emmissions from City-owned buildings (since 2007)"
     },
     {
-        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
-        "metric_name": "New York employment forecast for 2021",
-        "city": "New York City",
-        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2021'])",
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Light Duty Vehicles)",
+        "city": "Toronto",
+        "metric_parse_code": "float(data['Result'][168])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
-        "metric_name": "New York employment forecast for 2018",
-        "city": "New York City",
-        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2018'])",
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Medium Duty Vehicles)",
+        "city": "Toronto",
+        "metric_parse_code": "float(data['Result'][169])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
-        "metric_name": "New York employment forecast for 2019",
-        "city": "New York City",
-        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2019'])",
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Heavy Duty Vehicles)",
+        "city": "Toronto",
+        "metric_parse_code": "float(data['Result'][170])",
         "date_parse_code": "",
-        "cov_dimension_id": "",
-        "cov_metric_name": ""
-    },
-    {
-        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
-        "metric_name": "New York employment forecast for 2020",
-        "city": "New York City",
-        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2020'])",
-        "date_parse_code": "",
-        "cov_dimension_id": "",
+        "cov_dimesion_id": "",
         "cov_metric_name": ""
     }
 ]
