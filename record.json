@@ -179,6 +179,42 @@
         "date_parse_code": "",
         "cov_dimension_id": "3054",
         "cov_metric_name": "% reduction of total tonnes of greenhouse gas emmissions from City-owned buildings (since 2007)"
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast for 2021",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2021'])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast for 2018",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2018'])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast for 2019",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2019'])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast for 2020",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2020'])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
     }
 ]
 
