@@ -11,7 +11,7 @@ def get_data_from_records():
     Returns:
         [list]: list of entries
     """
-    with open('record.json') as f:
+    with open('record.json', 'rt', encoding='UTF8') as f:
         list_of_entries = json.load(f)
     return list_of_entries
 
@@ -60,12 +60,12 @@ def put_single_entry_in_csv(data_dict):
 
     if not path.exists(filename):
         # a csv file is created and a header is added 
-        with open(filename, 'w') as csvfile: # opened in write mode
+        with open(filename, 'w', encoding='UTF8') as csvfile: # opened in write mode
             writer = csv.writer(csvfile, lineterminator='\n')
             writer.writerow([key for key in data_dict.keys()]) # The keys of the dict are filled in as the header
 
     # this will read the existing csv file, and put the name of metrics that already exist in a list
-    with open(filename, 'r') as csvfile: # opened in read mode
+    with open(filename, 'r', encoding='UTF8') as csvfile: # opened in read mode
         existing_data = csv.reader(csvfile)
         next(existing_data, None) # skips the header while reading
         existing_metrics = []
@@ -76,7 +76,7 @@ def put_single_entry_in_csv(data_dict):
 
         # if the metric we are about to add doesn't exist in the existing_metrics list, then the metric is appended to the file
         if data_dict['Metric Name'] not in existing_metrics:
-            with open(filename, 'a') as csvfile: # opened in append mode
+            with open(filename, 'a', encoding='UTF8') as csvfile: # opened in append mode
                 writer = csv.writer(csvfile, lineterminator='\n')
                 # Value of Serial No. is reassigned in the dict
                 data_dict["Serial No."] = len(existing_metrics) + 1 # I add 1 to the lenght of existing_metrics list
