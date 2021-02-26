@@ -3,6 +3,7 @@ import json
 import os.path
 from os import path
 import csv
+import pandas as pd
 
 def get_data_from_records():
     """This function reads the record.json file and returns a list of dictionaries
@@ -25,9 +26,11 @@ def get_data_from_single_entry(single_entry):
         [dict]: this dict contains the exact data in the form of key-value pairs, which will be directly filled in the csv files
     """
     # get data from api
-    with urllib.request.urlopen(single_entry["api_endpoint"]) as url:
-        data = json.loads(url.read().decode())
-
+    try: 
+        with urllib.request.urlopen(single_entry["api_endpoint"]) as url:
+            data = json.loads(url.read().decode())
+    except ValueError as e: 
+        data = pd.read_csv(single_entry["api_endpoint"],sep=',')    
     # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead 
     if single_entry["metric_parse_code"] != "":
         metric_value = eval(single_entry["metric_parse_code"])
