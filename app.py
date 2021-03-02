@@ -59,31 +59,28 @@ def put_single_entry_in_csv(data_dict):
         data_dict (dict): This is the dict returned by get_data_from_single_entry function
     """
     filename = f"{data_dict['City']}.csv"
-    # checks if the specific city's file doesn't exist
+    df = pd.DataFrame(data_dict, index=[])
 
     if not path.exists(filename):
-        # a csv file is created and a header is added 
-        with open(filename, 'w') as csvfile: # opened in write mode
-            writer = csv.writer(csvfile, lineterminator='\n')
-            writer.writerow([key for key in data_dict.keys()]) # The keys of the dict are filled in as the header
+        df.to_csv(filename, mode='w', header=True, index=False)
 
-    # this will read the existing csv file, and put the name of metrics that already exist in a list
-    with open(filename, 'r') as csvfile: # opened in read mode
-        existing_data = csv.reader(csvfile)
-        next(existing_data, None) # skips the header while reading
-        existing_metrics = []
+    existing_data = pd.read_csv(filename)
+    existing_metrics = []  # list of metric names
 
-        # iterates through existing_data, and adds only the metric name in the existing_metrics list
-        for row in existing_data:
-            existing_metrics.append(row[1])
+    if data_dict['Metric Name'] not in existing_metrics:
+        data_dict['Serial No.'] = len(df['Metric Name']) + 1
+        df = df.append(data_dict, ignore_index=True)
+        df.to_csv(filename, mode='a', header=False, index=False)
+        existing_metrics.append(data_dict['Metric Name'])
 
-        # if the metric we are about to add doesn't exist in the existing_metrics list, then the metric is appended to the file
-        if data_dict['Metric Name'] not in existing_metrics:
-            with open(filename, 'a') as csvfile: # opened in append mode
-                writer = csv.writer(csvfile, lineterminator='\n')
-                # Value of Serial No. is reassigned in the dict
-                data_dict["Serial No."] = len(existing_metrics) + 1 # I add 1 to the lenght of existing_metrics list
-                writer.writerow([value for value in data_dict.values()]) # This appends a new row with all the values in the dict.
+    else:
+        for i, row in existing_data.iterrows():  # iterates through each row
+            if row['Metric Name'] == data_dict['Metric Name'] and row['Date'] == data_dict['Date']:  # if a row has the same metric name and date as data_dict
+                if row['Metric Value'] != data_dict['Metric Value']:  # if the row's metric value does not equal data_dict value
+
+                    df.loc[i, 'Metric Value'] = data_dict['Metric Value']  # replace with data_dict value
+
+        df.to_csv(filename, header=False, index=False)  # append to csv
             
 if __name__ == "__main__":
     list_of_entries = get_data_from_records()
