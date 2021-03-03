@@ -59,13 +59,16 @@ def put_single_entry_in_csv(data_dict):
         data_dict (dict): This is the dict returned by get_data_from_single_entry function
     """
     filename = f"{data_dict['City']}.csv"
-    df = pd.DataFrame(data_dict, index=[])
-
+    
     if not path.exists(filename):
-        df.to_csv(filename, mode='w', header=True, index=False)
+        pd.DataFrame(data_dict, index=[]).to_csv(filename, mode='a', header=True, index=False)
 
-    existing_data = pd.read_csv(filename)
-    existing_metrics = []  # list of metric names
+    df = pd.read_csv(filename)
+
+    existing_metrics = []
+
+    for i in df['Metric Name']:
+        existing_metrics.append(i)
 
     if data_dict['Metric Name'] not in existing_metrics:
         data_dict['Serial No.'] = len(df['Metric Name']) + 1
