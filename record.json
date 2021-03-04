@@ -167,7 +167,7 @@
         "city": "Calgary",
         "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
         "date_parse_code": "",
-        "cov_dimesion_id": "1548",
+        "cov_dimension_id": "1548",
         "cov_metric_name": "Greenhouse gas emissions from City – used Buildings (tonnes CO2e)"
     
     },
@@ -179,15 +179,6 @@
         "date_parse_code": "",
         "cov_dimension_id": "3054",
         "cov_metric_name": "% reduction of total tonnes of greenhouse gas emmissions from City-owned buildings (since 2007)"
-    },
-    {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Light Duty Vehicles)",
-        "city": "Toronto",
-        "metric_parse_code": "float(data['Result'][168])",
-        "date_parse_code": "",
-        "cov_dimension_id": "",
-        "cov_metric_name": ""
     },
     {
         "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
@@ -203,6 +194,24 @@
         "metric_name": "Total Litres of Fuel Consumed per 100 Km (Heavy Duty Vehicles)",
         "city": "Toronto",
         "metric_parse_code": "float(data['Result'][170])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/96e9989d-eca5-4e0b-824b-9789a39aea58/resource/1598f1b3-2312-4317-ac48-229dfc1cd298/download/indoor-ice-rinks-data.xlsx",
+        "metric_name": "Test",
+        "city": "Toronto",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Light Duty Vehicles)",
+        "city": "Toronto",
+        "metric_parse_code": "float(data['Result'][168])",
         "date_parse_code": "",
         "cov_dimension_id": "",
         "cov_metric_name": ""

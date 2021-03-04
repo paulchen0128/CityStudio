@@ -4,6 +4,7 @@ import os.path
 from os import path
 import csv
 import pandas as pd
+import pathlib
 
 def get_data_from_records():
     """This function reads the record.json file and returns a list of dictionaries
@@ -26,11 +27,20 @@ def get_data_from_single_entry(single_entry):
         [dict]: this dict contains the exact data in the form of key-value pairs, which will be directly filled in the csv files
     """
     # get data from api
-    try: 
+    url = single_entry["api_endpoint"]
+    file_type = pathlib.Path(url).suffix
+    try:
         with urllib.request.urlopen(single_entry["api_endpoint"]) as url:
             data = json.loads(url.read().decode())
-    except ValueError as e: 
-        data = pd.read_csv(single_entry["api_endpoint"],sep=',')    
+    except:
+        if file_type[0:5] != ".json" and file_type == "":
+            data = pd.read_csv(single_entry["api_endpoint"],sep=',')
+        elif file_type == ".xlsx" or ".xls":
+            data = pd.read_excel(single_entry["api_endpoint"])
+            print(single_entry["api_endpoint"])
+
+
+    
     # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead 
     if single_entry["metric_parse_code"] != "":
         metric_value = eval(single_entry["metric_parse_code"])
