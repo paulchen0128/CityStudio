@@ -36,10 +36,13 @@ def get_data_from_single_entry(single_entry):
         metric_value = eval(single_entry["metric_parse_code"])
     else:
         metric_value = "-"
-    if single_entry["date_parse_code"] != "":
+    if not single_entry["date_parse_code"].isdigit() and single_entry["date_parse_code"] != "":
         date_value = eval(single_entry["date_parse_code"])
-    else:
+    elif single_entry["date_parse_code"] == "":
         date_value = "-"
+    else:
+        date_value = single_entry["date_parse_code"]
+
     return {'Serial No.': "", # I left this value blank because I reassign the value of serial number in line 78, so it doesn't matter what is was initially
             'Metric Name': single_entry["metric_name"],
             'City': single_entry["city"],
@@ -58,7 +61,9 @@ def put_single_entry_in_csv(data_dict):
     Args:
         data_dict (dict): This is the dict returned by get_data_from_single_entry function
     """
+
     filename = f"{data_dict['City']}.csv"
+<<<<<<< Updated upstream
     
     if not path.exists(filename):
         pd.DataFrame(data_dict, index=[]).to_csv(filename, mode='a', header=True, index=False)
@@ -72,19 +77,36 @@ def put_single_entry_in_csv(data_dict):
 
     if data_dict['Metric Name'] not in existing_metrics:
         data_dict['Serial No.'] = len(df['Metric Name']) + 1
+=======
+    df = pd.DataFrame(data_dict, index=[])
+    if not path.exists(filename):
+        df.to_csv(filename, mode='w', header=True, index=False)
+       
+    existing_data = pd.read_csv(filename)
+    if len(existing_data) == 0:
+        data_dict["Serial No."] = len(existing_data) + 1
+        df = pd.DataFrame(data_dict, index=[])
+>>>>>>> Stashed changes
         df = df.append(data_dict, ignore_index=True)
         df.to_csv(filename, mode='a', header=False, index=False)
-        existing_metrics.append(data_dict['Metric Name'])
+        return
 
-    else:
-        for i, row in existing_data.iterrows():  # iterates through each row
-            if row['Metric Name'] == data_dict['Metric Name'] and row['Date'] == data_dict['Date']:  # if a row has the same metric name and date as data_dict
-                if row['Metric Value'] != data_dict['Metric Value']:  # if the row's metric value does not equal data_dict value
+    for i in existing_data.index:
+        existing_metric_name = existing_data['Metric Name'][i]
+        existing_date = str(existing_data['Date'][i])
+        existing_value = existing_data['Metric Value'][i]
 
-                    df.loc[i, 'Metric Value'] = data_dict['Metric Value']  # replace with data_dict value
+        if existing_metric_name == data_dict['Metric Name'] and existing_date == data_dict['Date']:  # if a existing_data has the same metric name and date as data_dict
+            if existing_value != data_dict['Metric Value']:
+                existing_data.replace(existing_data['Metric Value'][i], data_dict['Metric Value'], inplace=True)
+                existing_data.to_csv(filename, index=False)
+            return
+    
+    data_dict["Serial No."] = len(existing_data) + 1
+    existing_data = existing_data.append(data_dict, ignore_index=True)
+    existing_data.to_csv(filename, index=False)
 
-        df.to_csv(filename, header=False, index=False)  # append to csv
-            
+
 if __name__ == "__main__":
     list_of_entries = get_data_from_records()
     # the loop below passes a single entry to every function. The loop runs until the list of entries is exhausted
