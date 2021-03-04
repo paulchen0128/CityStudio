@@ -63,21 +63,6 @@ def put_single_entry_in_csv(data_dict):
     """
 
     filename = f"{data_dict['City']}.csv"
-<<<<<<< Updated upstream
-    
-    if not path.exists(filename):
-        pd.DataFrame(data_dict, index=[]).to_csv(filename, mode='a', header=True, index=False)
-
-    df = pd.read_csv(filename)
-
-    existing_metrics = []
-
-    for i in df['Metric Name']:
-        existing_metrics.append(i)
-
-    if data_dict['Metric Name'] not in existing_metrics:
-        data_dict['Serial No.'] = len(df['Metric Name']) + 1
-=======
     df = pd.DataFrame(data_dict, index=[])
     if not path.exists(filename):
         df.to_csv(filename, mode='w', header=True, index=False)
@@ -86,7 +71,6 @@ def put_single_entry_in_csv(data_dict):
     if len(existing_data) == 0:
         data_dict["Serial No."] = len(existing_data) + 1
         df = pd.DataFrame(data_dict, index=[])
->>>>>>> Stashed changes
         df = df.append(data_dict, ignore_index=True)
         df.to_csv(filename, mode='a', header=False, index=False)
         return
