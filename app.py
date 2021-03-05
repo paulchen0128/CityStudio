@@ -4,6 +4,8 @@ import os.path
 from os import path
 import csv
 import pandas as pd
+import requests
+from datetime import datetime
 
 def get_data_from_records():
     """This function reads the record.json file and returns a list of dictionaries
@@ -12,7 +14,7 @@ def get_data_from_records():
     Returns:
         [list]: list of entries
     """
-    with open('record.json') as f:
+    with open('record.json', 'rt', encoding='UTF8') as f:
         list_of_entries = json.load(f)
     return list_of_entries
 
@@ -26,29 +28,44 @@ def get_data_from_single_entry(single_entry):
         [dict]: this dict contains the exact data in the form of key-value pairs, which will be directly filled in the csv files
     """
     # get data from api
-    try: 
+    try:
         with urllib.request.urlopen(single_entry["api_endpoint"]) as url:
             data = json.loads(url.read().decode())
-    except ValueError as e: 
-        data = pd.read_csv(single_entry["api_endpoint"],sep=',')    
-    # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead 
-    if single_entry["metric_parse_code"] != "":
-        metric_value = eval(single_entry["metric_parse_code"])
-    else:
-        metric_value = "-"
-    if single_entry["date_parse_code"] != "":
-        date_value = eval(single_entry["date_parse_code"])
-    else:
-        date_value = "-"
-    return {'Serial No.': "", # I left this value blank because I reassign the value of serial number in line 78, so it doesn't matter what is was initially
-            'Metric Name': single_entry["metric_name"],
-            'City': single_entry["city"],
-            'Metric Value': metric_value,
-            'Date': date_value,
-            'CoV Dimension ID': single_entry["cov_dimension_id"] if single_entry["cov_dimension_id"] != "" else "-", # if the value is "", assigns "-"
-            'CoV Metric Name' : single_entry["cov_metric_name"] if single_entry["cov_metric_name"] != "" else "-", # if the value is "", assigns "-"
-            'API Endpoint': single_entry["api_endpoint"]
-    }
+
+        # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead 
+        if single_entry["metric_parse_code"] != "":
+            metric_value = eval(single_entry["metric_parse_code"])
+        else:
+            metric_value = "-"
+        if not single_entry["date_parse_code"].isdigit() and single_entry["date_parse_code"] != "":
+            date_value = eval(single_entry["date_parse_code"])
+        elif single_entry["date_parse_code"] == "":
+            date_value = "-"
+        else:
+            date_value = single_entry["date_parse_code"]
+        return {'Serial No.': "", # I left this value blank because I reassign the value of serial number in line 78, so it doesn't matter what is was initially
+                'Metric Name': single_entry["metric_name"],
+                'City': single_entry["city"],
+                'Metric Value': metric_value,
+                'Date': date_value,
+                'CoV Dimension ID': single_entry["cov_dimension_id"] if single_entry["cov_dimension_id"] != "" else "-", # if the value is "", assigns "-"
+                'CoV Metric Name' : single_entry["cov_metric_name"] if single_entry["cov_metric_name"] != "" else "-", # if the value is "", assigns "-"
+                'API Endpoint': single_entry["api_endpoint"]
+        }
+    except (ValueError, urllib.error.HTTPError, urllib.error.URLError) as err:
+        now = datetime.now()
+
+        date_time = now.strftime("%m/%d/%Y %H:%M:%S")
+        filename = "app.log"
+        log_data = '%s  Invalid API endpoint: %s\n' % (date_time, single_entry["api_endpoint"])
+        if path.exists(filename):
+            write_file = 'a'
+        else:
+            write_file = 'w'
+
+        with open(filename, write_file) as logfile:
+            logfile.write(log_data)
+        pass
     
 def put_single_entry_in_csv(data_dict):
     """This function takes the dictionary generated in the get_data_from_single_entry function and puts in a csv file of the city.
@@ -58,36 +75,42 @@ def put_single_entry_in_csv(data_dict):
     Args:
         data_dict (dict): This is the dict returned by get_data_from_single_entry function
     """
+
     filename = f"{data_dict['City']}.csv"
-    # checks if the specific city's file doesn't exist
-
+    df = pd.DataFrame(data_dict, index=[])
     if not path.exists(filename):
-        # a csv file is created and a header is added 
-        with open(filename, 'w') as csvfile: # opened in write mode
-            writer = csv.writer(csvfile, lineterminator='\n')
-            writer.writerow([key for key in data_dict.keys()]) # The keys of the dict are filled in as the header
+        df.to_csv(filename, mode='w', header=True, index=False)
+       
+    existing_data = pd.read_csv(filename)
+    if len(existing_data) == 0:
+        data_dict["Serial No."] = len(existing_data) + 1
+        df = pd.DataFrame(data_dict, index=[])
+        df = df.append(data_dict, ignore_index=True)
+        df.to_csv(filename, mode='a', header=False, index=False)
+        return
 
-    # this will read the existing csv file, and put the name of metrics that already exist in a list
-    with open(filename, 'r') as csvfile: # opened in read mode
-        existing_data = csv.reader(csvfile)
-        next(existing_data, None) # skips the header while reading
-        existing_metrics = []
+    for i in existing_data.index:
+        existing_metric_name = existing_data['Metric Name'][i]
+        existing_date = str(existing_data['Date'][i])
+        existing_value = existing_data['Metric Value'][i]
 
-        # iterates through existing_data, and adds only the metric name in the existing_metrics list
-        for row in existing_data:
-            existing_metrics.append(row[1])
+        if existing_metric_name == data_dict['Metric Name'] and existing_date == data_dict['Date']:  # if a existing_data has the same metric name and date as data_dict
+            if existing_value != data_dict['Metric Value']:
+                existing_data.replace(existing_data['Metric Value'][i], data_dict['Metric Value'], inplace=True)
+                existing_data.to_csv(filename, index=False)
+            return
+    
+    data_dict["Serial No."] = len(existing_data) + 1
+    existing_data = existing_data.append(data_dict, ignore_index=True)
+    existing_data.to_csv(filename, index=False)
 
-        # if the metric we are about to add doesn't exist in the existing_metrics list, then the metric is appended to the file
-        if data_dict['Metric Name'] not in existing_metrics:
-            with open(filename, 'a') as csvfile: # opened in append mode
-                writer = csv.writer(csvfile, lineterminator='\n')
-                # Value of Serial No. is reassigned in the dict
-                data_dict["Serial No."] = len(existing_metrics) + 1 # I add 1 to the lenght of existing_metrics list
-                writer.writerow([value for value in data_dict.values()]) # This appends a new row with all the values in the dict.
-            
+
 if __name__ == "__main__":
     list_of_entries = get_data_from_records()
     # the loop below passes a single entry to every function. The loop runs until the list of entries is exhausted
     for single_entry in list_of_entries:
-        data_dict = get_data_from_single_entry(single_entry)
-        put_single_entry_in_csv(data_dict)
+        try:
+            data_dict = get_data_from_single_entry(single_entry)
+            put_single_entry_in_csv(data_dict)
+        except TypeError:
+            pass

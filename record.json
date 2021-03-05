@@ -1,6 +1,6 @@
 [
     {
-        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json",
+        "api_endpoint": "https://data.seattle.gov",
         "metric_name": "total GHG emissions in tonnes",
         "city": "Seattle",
         "metric_parse_code": "sum(float(d['totalghgemissions']) for d in data)",
@@ -9,7 +9,7 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.cityofnewyork.us/resource/yg3y-7juh.json?$limit=9999999",
+        "api_endpoint": "https://data.cityofnewyork.us/resource",
         "metric_name": "% of unclean business",
         "city": "New York City",
         "metric_parse_code": "(1-(len([entry for entry in data if entry['overall_condition'] == 'A'])/len(data)))",
@@ -18,7 +18,7 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.ny.gov/resource/erjw-j2zx.json",
+        "api_endpoint": "https://data.ny.",
         "metric_name": "Annual Energy Efficiency Reports (EER) completed",
         "city": "New York City",
         "metric_parse_code": "len([i for i in data if i['year_completed']=='2020'])",
@@ -46,7 +46,7 @@
     },
     {
         "api_endpoint": "https://data.cityofnewyork.us/resource/fc53-9hrv.json?$limit=9999999",
-        "metric_name": "Number of NYC EV Fleet vehciles",
+        "metric_name": "Number of NYC EV Fleet vehicles",
         "city": "New York City",
         "metric_parse_code": "len(data)",
         "date_parse_code": "",
@@ -162,17 +162,17 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=9999999",
+        "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=99999",
         "metric_name": "Environmental & Safety Management",
         "city": "Calgary",
         "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
         "date_parse_code": "",
-        "cov_dimesion_id": "1548",
+        "cov_dimension_id": "1548",
         "cov_metric_name": "Greenhouse gas emissions from City – used Buildings (tonnes CO2e)"
-    
+
     },
     {
-        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=9999999",
+        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=99999",
         "metric_name": "% reduction in building energy emissions",
         "city": "Seattle",
         "metric_parse_code": "sum(float(i['totalghgemissions'])for i in data if i['epapropertytype'] == 'K-12 School')",
@@ -181,33 +181,41 @@
         "cov_metric_name": "% reduction of total tonnes of greenhouse gas emmissions from City-owned buildings (since 2007)"
     },
     {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Light Duty Vehicles)",
-        "city": "Toronto",
-        "metric_parse_code": "float(data['Result'][168])",
-        "date_parse_code": "",
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2021'])",
+        "date_parse_code": "2021",
         "cov_dimension_id": "",
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Medium Duty Vehicles)",
-        "city": "Toronto",
-        "metric_parse_code": "float(data['Result'][169])",
-        "date_parse_code": "",
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2018'])",
+        "date_parse_code": "2018",
         "cov_dimension_id": "",
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Heavy Duty Vehicles)",
-        "city": "Toronto",
-        "metric_parse_code": "float(data['Result'][170])",
-        "date_parse_code": "",
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2019'])",
+        "date_parse_code": "2019",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/nsk4-4pvs.json",
+        "metric_name": "New York employment forecast",
+        "city": "New York City",
+        "metric_parse_code": "sum([float(entry['value']) for entry in data if entry['ref_yr'] == '2020'])",
+        "date_parse_code": "2020",
         "cov_dimension_id": "",
         "cov_metric_name": ""
     }
 ]
-
 
 
