@@ -4,8 +4,51 @@ import os.path
 from os import path
 import csv
 import pandas as pd
-import requests
+import glob
 from datetime import datetime
+
+
+def convert_csv():
+    """
+    This function converts all the csv files into an xlsx file
+
+    :returns xlsx files
+    """
+
+    path = r'C:\Users\sajji\OneDrive\Documents\School Docs\Python\CityStudio-master'
+    files = glob.glob(path + "/*.csv")
+
+    for filename in files:
+        df = pd.read_csv(filename)
+        date = os.path.splitext(os.path.basename(filename))[0] # this gets rid of the .csv in the filename
+        df.to_excel(date + '.xlsx')
+
+
+def format_excel():
+    """
+    This function takes the newly converted files and formats the document making each header have a drop down menu
+
+    :returns styled files
+    """
+
+    path = r'C:\Users\sajji\OneDrive\Documents\School Docs\Python\CityStudio-master'
+    files = glob.glob(path + "/*.xlsx")
+
+    for filename in files:
+        df = pd.read_excel(filename)
+        df.drop(['Unnamed: 0'], axis=1, inplace=True)
+        writer = pd.ExcelWriter(filename, engine='xlsxwriter')
+        df.to_excel(writer, sheet_name='Sheet1', startrow=1, header=False, index=False)
+        worksheet = writer.sheets['Sheet1']
+        (max_row, max_col) = df.shape
+        column_settings = [{'header': column} for column in df.columns]
+        worksheet.add_table(0, 0, max_row, max_col - 1, {'columns': column_settings})
+        worksheet.set_column(0, max_col - 1, 12)
+        for i, col in enumerate(df.columns):
+            column_len = max(df[col].astype(str).str.len().max(), len(col) + 2)
+            worksheet.set_column(i, i, column_len)
+        writer.save()
+
 
 def get_data_from_records():
     """This function reads the record.json file and returns a list of dictionaries
@@ -18,9 +61,10 @@ def get_data_from_records():
         list_of_entries = json.load(f)
     return list_of_entries
 
+
 def get_data_from_single_entry(single_entry):
     """This function gets the data from the API, and returns a dictionary with all the key-value pairs
-    
+
     Args:
         single_entry (dict): this is a dictionary that represents one entry/row
 
@@ -32,7 +76,7 @@ def get_data_from_single_entry(single_entry):
         with urllib.request.urlopen(single_entry["api_endpoint"]) as url:
             data = json.loads(url.read().decode())
 
-        # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead 
+        # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead
         if single_entry["metric_parse_code"] != "":
             metric_value = eval(single_entry["metric_parse_code"])
         else:
@@ -43,15 +87,18 @@ def get_data_from_single_entry(single_entry):
             date_value = "-"
         else:
             date_value = single_entry["date_parse_code"]
-        return {'Serial No.': "", # I left this value blank because I reassign the value of serial number in line 78, so it doesn't matter what is was initially
+        return {'Serial No.': "",
+                # I left this value blank because I reassign the value of serial number in line 78, so it doesn't matter what is was initially
                 'Metric Name': single_entry["metric_name"],
                 'City': single_entry["city"],
                 'Metric Value': metric_value,
                 'Date': date_value,
-                'CoV Dimension ID': single_entry["cov_dimension_id"] if single_entry["cov_dimension_id"] != "" else "-", # if the value is "", assigns "-"
-                'CoV Metric Name' : single_entry["cov_metric_name"] if single_entry["cov_metric_name"] != "" else "-", # if the value is "", assigns "-"
+                'CoV Dimension ID': single_entry["cov_dimension_id"] if single_entry["cov_dimension_id"] != "" else "-",
+                # if the value is "", assigns "-"
+                'CoV Metric Name': single_entry["cov_metric_name"] if single_entry["cov_metric_name"] != "" else "-",
+                # if the value is "", assigns "-"
                 'API Endpoint': single_entry["api_endpoint"]
-        }
+                }
     except (ValueError, urllib.error.HTTPError, urllib.error.URLError) as err:
         now = datetime.now()
 
@@ -66,10 +113,11 @@ def get_data_from_single_entry(single_entry):
         with open(filename, write_file) as logfile:
             logfile.write(log_data)
         pass
-    
+
+
 def put_single_entry_in_csv(data_dict):
     """This function takes the dictionary generated in the get_data_from_single_entry function and puts in a csv file of the city.
-       If the csv file doesn't exist, it creates one with a header. The keys in the data_dict are filled in as a header. If the file 
+       If the csv file doesn't exist, it creates one with a header. The keys in the data_dict are filled in as a header. If the file
        exists, it appends to the respective city's file.
 
     Args:
@@ -80,7 +128,7 @@ def put_single_entry_in_csv(data_dict):
     df = pd.DataFrame(data_dict, index=[])
     if not path.exists(filename):
         df.to_csv(filename, mode='w', header=True, index=False)
-       
+
     existing_data = pd.read_csv(filename)
     if len(existing_data) == 0:
         data_dict["Serial No."] = len(existing_data) + 1
@@ -94,12 +142,13 @@ def put_single_entry_in_csv(data_dict):
         existing_date = str(existing_data['Date'][i])
         existing_value = existing_data['Metric Value'][i]
 
-        if existing_metric_name == data_dict['Metric Name'] and existing_date == data_dict['Date']:  # if a existing_data has the same metric name and date as data_dict
+        if existing_metric_name == data_dict['Metric Name'] and existing_date == data_dict[
+            'Date']:  # if a existing_data has the same metric name and date as data_dict
             if existing_value != data_dict['Metric Value']:
                 existing_data.replace(existing_data['Metric Value'][i], data_dict['Metric Value'], inplace=True)
                 existing_data.to_csv(filename, index=False)
             return
-    
+
     data_dict["Serial No."] = len(existing_data) + 1
     existing_data = existing_data.append(data_dict, ignore_index=True)
     existing_data.to_csv(filename, index=False)
@@ -112,5 +161,7 @@ if __name__ == "__main__":
         try:
             data_dict = get_data_from_single_entry(single_entry)
             put_single_entry_in_csv(data_dict)
+            convert_csv()
+            format_excel()
         except TypeError:
             pass

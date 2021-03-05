@@ -1,6 +1,6 @@
 [
     {
-        "api_endpoint": "https://data.seattle.gov",
+        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json",
         "metric_name": "total GHG emissions in tonnes",
         "city": "Seattle",
         "metric_parse_code": "sum(float(d['totalghgemissions']) for d in data)",
@@ -9,7 +9,7 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.cityofnewyork.us/resource",
+        "api_endpoint": "https://data.cityofnewyork.us/resource/yg3y-7juh.json?$limit=9999999",
         "metric_name": "% of unclean business",
         "city": "New York City",
         "metric_parse_code": "(1-(len([entry for entry in data if entry['overall_condition'] == 'A'])/len(data)))",
@@ -18,7 +18,7 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.ny.",
+        "api_endpoint": "https://data.ny.gov/resource/erjw-j2zx.json",
         "metric_name": "Annual Energy Efficiency Reports (EER) completed",
         "city": "New York City",
         "metric_parse_code": "len([i for i in data if i['year_completed']=='2020'])",
@@ -46,7 +46,7 @@
     },
     {
         "api_endpoint": "https://data.cityofnewyork.us/resource/fc53-9hrv.json?$limit=9999999",
-        "metric_name": "Number of NYC EV Fleet vehicles",
+        "metric_name": "Number of NYC EV Fleet vehciles",
         "city": "New York City",
         "metric_parse_code": "len(data)",
         "date_parse_code": "",
@@ -162,7 +162,7 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=99999",
+        "api_endpoint": "https://data.calgary.ca/resource/m7gu-3xk5.json?$limit=9999999",
         "metric_name": "Environmental & Safety Management",
         "city": "Calgary",
         "metric_parse_code": "sum([float(d['tonnes_co2e']) for d in data if 'tonnes_co2e' in d.keys()])",
@@ -172,7 +172,7 @@
 
     },
     {
-        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=99999",
+        "api_endpoint": "https://data.seattle.gov/resource/3th6-ticf.json?$limit=9999999",
         "metric_name": "% reduction in building energy emissions",
         "city": "Seattle",
         "metric_parse_code": "sum(float(i['totalghgemissions'])for i in data if i['epapropertytype'] == 'K-12 School')",
@@ -215,7 +215,121 @@
         "date_parse_code": "2020",
         "cov_dimension_id": "",
         "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Light Duty Vehicles)",
+        "city": "Toronto",
+        "metric_parse_code": "float(data['Result'][168])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Medium Duty Vehicles)",
+        "city": "Toronto",
+        "metric_parse_code": "float(data['Result'][169])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Heavy Duty Vehicles)",
+        "city": "Toronto",
+        "metric_parse_code": "float(data['Result'][170])",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint":"https://data.surrey.ca/dataset/24cc0ee4-8517-4e9b-9475-6cecf2cf7737/resource/62def0c6-4610-4e27-831f-fe27738a6363/download/financialinformationbudget2019json.zip",
+        "metric_name": "Expenses as a % of lease/rental revenues",
+        "city": "Surrey",
+        "metric_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
+    },
+    {
+        "api_endpoint": " https://data.calgary.ca/resource/dpcu-jr23.json?$limit=999999",
+        "metric_name": "Number of Water Main Breaks per 100 Km of Water Distribution Pipe",
+        "city": "Calgary",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "1592",
+        "cov_metric_name": "# of water main breaks"
+    },
+     {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/9558f0bc-cbbd-41f0-8164-8b412570fca6",
+        "metric_name": "Number of Water Main Breaks per 100 Km of Water Distribution Pipe",
+        "city": "Toronto",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "1592",
+        "cov_metric_name": "# of water main breaks"
+    },
+    {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/fd28a23c-8d79-4419-97a6-634abb50f6fd",
+        "metric_name": " % of Water Quality Tests in Compliance with Provincial Drinking Water Standards",
+        "city": "Toronto",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "2287",
+        "cov_metric_name": "Percentage of Passed Water Quality Tests -  Bacteriological"
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/bkwf-xfky.json?$limit=999999",
+        "metric_name": "In-City samples meeting water quality standards for coliform bacteria (%)",
+        "city": "New York City",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "2287",
+        "cov_metric_name": "Percentage of Passed Water Quality Tests -  Bacteriological"
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/bkwf-xfky.json?$limit=999999",
+        "metric_name": "Samples testing positive for coliform bacteria (%)",
+        "city": "New York City",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "2287",
+        "cov_metric_name": "Percentage of Passed Water Quality Tests -  Bacteriological"
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/rv63-53db.json?$limit=999999",
+        "metric_name": "Missed recycling collections (%)",
+        "city": "New York City",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "2480",
+        "cov_metric_name": "# of Missed Garbage and Greenbin Collections"
+    },
+     {
+        "api_endpoint": "https://cosmos.surrey.ca/geo_ref/Images/OpenDataArchives/Greenways_JSON.zip",
+        "metric_name": "Total # of kilometers of cycling routes (on-street and off-street)",
+        "city": "Surrey",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "1186",
+        "cov_metric_name": "Kilometers of total bike network"
+    },
+     {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/uiay-nctu.json?$limit=999999",
+        "metric_name": "Bicycle lane miles installed",
+        "city": "New York City",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "1186",
+        "cov_metric_name": "Kilometers of total bike network"
+    },
+    {
+        "api_endpoint": "https://data.cityofnewyork.us/resource/pqdc-ncdn.json?$limit=999999",
+        "metric_name": "City employees/participants trained in Equity and Inclusion",
+        "city": "New York City",
+        "metric_parse_code": "",
+        "date_parse_code": "",
+        "cov_dimension_id": "2038",
+        "cov_metric_name": "Cultural competency training - Number of participants"
     }
 ]
-
-
