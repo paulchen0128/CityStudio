@@ -7,6 +7,7 @@ import pandas as pd
 import glob
 from datetime import datetime
 
+current_dir = path.dirname(path.realpath(__file__))
 
 def convert_csv():
     """
@@ -15,12 +16,11 @@ def convert_csv():
     :returns xlsx files
     """
 
-    path = r'C:\Users\sajji\OneDrive\Documents\School Docs\Python\CityStudio-master'
-    files = glob.glob(path + "/*.csv")
+    files = glob.glob(current_dir + "/*.csv")
 
     for filename in files:
         df = pd.read_csv(filename)
-        date = os.path.splitext(os.path.basename(filename))[0] # this gets rid of the .csv in the filename
+        date = path.splitext(path.basename(filename))[0] # this gets rid of the .csv in the filename
         df.to_excel(date + '.xlsx')
 
 
@@ -31,8 +31,8 @@ def format_excel():
     :returns styled files
     """
 
-    path = r'C:\Users\sajji\OneDrive\Documents\School Docs\Python\CityStudio-master'
-    files = glob.glob(path + "/*.xlsx")
+    
+    files = glob.glob(current_dir + "/*.xlsx")
 
     for filename in files:
         df = pd.read_excel(filename)
