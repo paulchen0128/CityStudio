@@ -6,8 +6,8 @@ import csv
 import pandas as pd
 import glob
 from datetime import datetime
+import pathlib
 
-current_dir = path.dirname(path.realpath(__file__))
 
 def convert_csv():
     """
@@ -16,11 +16,12 @@ def convert_csv():
     :returns xlsx files
     """
 
-    files = glob.glob(current_dir + "/*.csv")
+    path = os.path.dirname(os.path.abspath(__file__))
+    files = glob.glob(path + "/*.csv")
 
     for filename in files:
         df = pd.read_csv(filename)
-        date = path.splitext(path.basename(filename))[0] # this gets rid of the .csv in the filename
+        date = os.path.splitext(os.path.basename(filename))[0] # this gets rid of the .csv in the filename
         df.to_excel(date + '.xlsx')
 
 
@@ -31,8 +32,8 @@ def format_excel():
     :returns styled files
     """
 
-    
-    files = glob.glob(current_dir + "/*.xlsx")
+    path = os.path.dirname(os.path.abspath(__file__))
+    files = glob.glob(path + "/*.xlsx")
 
     for filename in files:
         df = pd.read_excel(filename)
@@ -62,20 +63,30 @@ def get_data_from_records():
     return list_of_entries
 
 
+
+
 def get_data_from_single_entry(single_entry):
     """This function gets the data from the API, and returns a dictionary with all the key-value pairs
-
+ 
     Args:
         single_entry (dict): this is a dictionary that represents one entry/row
 
     Returns:
         [dict]: this dict contains the exact data in the form of key-value pairs, which will be directly filled in the csv files
     """
+    url = single_entry["api_endpoint"]
+    file_type = pathlib.Path(url).suffix
     # get data from api
     try:
-        with urllib.request.urlopen(single_entry["api_endpoint"]) as url:
-            data = json.loads(url.read().decode())
-
+        if "json" in single_entry["api_endpoint"]:
+            with urllib.request.urlopen(single_entry["api_endpoint"]) as url:
+                    data = json.loads(url.read().decode())
+        elif "csv" in single_entry["api_endpoint"]:
+            data = pd.read_csv(single_entry["api_endpoint"], sep=',')
+        elif ".xlsx" in single_entry["api_endpoint"]:
+            data = pd.read_excel(single_entry["api_endpoint"])
+        else:
+            raise ValueError
         # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead
         if single_entry["metric_parse_code"] != "":
             metric_value = eval(single_entry["metric_parse_code"])
@@ -99,12 +110,12 @@ def get_data_from_single_entry(single_entry):
                 # if the value is "", assigns "-"
                 'API Endpoint': single_entry["api_endpoint"]
                 }
-    except (ValueError, urllib.error.HTTPError, urllib.error.URLError) as err:
+    except (ValueError, urllib.error.HTTPError, urllib.error.URLError, FileNotFoundError) as err:
         now = datetime.now()
 
         date_time = now.strftime("%m/%d/%Y %H:%M:%S")
         filename = "app.log"
-        log_data = '%s  Invalid API endpoint: %s\n' % (date_time, single_entry["api_endpoint"])
+        log_data = 'Timestamp: %s  Error - Invalid API endpoint: %s\n' % (date_time, single_entry["api_endpoint"])
         if path.exists(filename):
             write_file = 'a'
         else:
@@ -112,8 +123,7 @@ def get_data_from_single_entry(single_entry):
 
         with open(filename, write_file) as logfile:
             logfile.write(log_data)
-        pass
-
+            print("API Endpoint Error:", err, single_entry["api_endpoint"])
 
 def put_single_entry_in_csv(data_dict):
     """This function takes the dictionary generated in the get_data_from_single_entry function and puts in a csv file of the city.
