@@ -8,6 +8,26 @@ import glob
 from datetime import datetime
 import pathlib
 
+def merge_files():
+    frames = dict()
+    path = os.path.dirname(os.path.abspath(__file__))
+    files = glob.glob(path + "\Cities\*.xlsx")
+    
+    for i in range(len(files)):
+        s = os.path.splitext(files[i])
+        s = os.path.split(s[0])
+
+        frames[s[1]] = files[i]
+    
+    writer = pd.ExcelWriter(path+"\\merging_file.xlsx", engine='xlsxwriter')
+
+    for sheet, frame in frames.items():
+        df = pd.read_excel(frame)
+        df.to_excel(writer, sheet_name=sheet)
+    writer.save()
+
+    format_excel(path+"\\merging_file.xlsx")
+    
 
 def convert_csv():
     """
@@ -17,29 +37,34 @@ def convert_csv():
     """
 
     path = os.path.dirname(os.path.abspath(__file__))
-    files = glob.glob(path + "/*.csv")
+    dir_path = path + "\Cities"
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    files = glob.glob(path + "\*.csv")
 
     for filename in files:
         df = pd.read_csv(filename)
-        date = os.path.splitext(os.path.basename(filename))[0] # this gets rid of the .csv in the filename
-        df.to_excel(date + '.xlsx')
+        city = os.path.splitext(os.path.basename(filename))[0] # this gets rid of the .csv in the filename
+        df.to_excel(dir_path+"\\"+city+".xlsx")
+        format_excel(dir_path+"\\"+city+".xlsx")
+        os.remove(filename)
 
 
-def format_excel():
+def format_excel(filename):
     """
     This function takes the newly converted files and formats the document making each header have a drop down menu
 
     :returns styled files
     """
+    xl = pd.ExcelFile(filename)
 
-    path = os.path.dirname(os.path.abspath(__file__))
-    files = glob.glob(path + "/*.xlsx")
-
-    for filename in files:
+    if len(xl.sheet_names) == 1:
         df = pd.read_excel(filename)
         df.drop(['Unnamed: 0'], axis=1, inplace=True)
+        
         writer = pd.ExcelWriter(filename, engine='xlsxwriter')
-        df.to_excel(writer, sheet_name='Sheet1', startrow=1, header=False, index=False)
+
+        df.to_excel(writer, startrow=1, header=False, index=False)
         worksheet = writer.sheets['Sheet1']
         (max_row, max_col) = df.shape
         column_settings = [{'header': column} for column in df.columns]
@@ -48,8 +73,24 @@ def format_excel():
         for i, col in enumerate(df.columns):
             column_len = max(df[col].astype(str).str.len().max(), len(col) + 2)
             worksheet.set_column(i, i, column_len)
-        writer.save()
+    else:
+        writer = pd.ExcelWriter('benchmarking.xlsx', engine='xlsxwriter')
 
+        for i in range(len(xl.sheet_names)):
+            df = pd.read_excel(xl, xl.sheet_names[i])
+            df.drop(['Unnamed: 0'], axis=1, inplace=True)
+            
+            df.to_excel(writer, sheet_name=xl.sheet_names[i], startrow=1, header=False, index=False)
+            worksheet = writer.sheets[xl.sheet_names[i]]
+            (max_row, max_col) = df.shape
+            column_settings = [{'header': column} for column in df.columns]
+            worksheet.add_table(0, 0, max_row, max_col - 1, {'columns': column_settings})
+            worksheet.set_column(0, max_col - 1, 12)
+            for i, col in enumerate(df.columns):
+                column_len = max(df[col].astype(str).str.len().max(), len(col) + 2)
+                worksheet.set_column(i, i, column_len)
+    writer.save()
+    
 
 def get_data_from_records():
     """This function reads the record.json file and returns a list of dictionaries
@@ -61,8 +102,6 @@ def get_data_from_records():
     with open('record.json', 'rt', encoding='UTF8') as f:
         list_of_entries = json.load(f)
     return list_of_entries
-
-
 
 
 def get_data_from_single_entry(single_entry):
@@ -171,7 +210,9 @@ if __name__ == "__main__":
         try:
             data_dict = get_data_from_single_entry(single_entry)
             put_single_entry_in_csv(data_dict)
-            convert_csv()
-            format_excel()
         except TypeError:
             pass
+    convert_csv()
+    merge_files()
+    os.remove("merging_file.xlsx")
+    
