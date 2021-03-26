@@ -8,6 +8,25 @@ import glob
 from datetime import datetime
 import pathlib
 
+def merge_files():
+    frames = dict()
+    path = os.path.dirname(os.path.abspath(__file__))
+    files = glob.glob(path + "\Cities\*.xlsx")
+    
+    for i in range(len(files)):
+        s = os.path.splitext(files[i])
+        s = os.path.split(s[0])
+        
+        frames[s[1]] = files[i]
+    
+    writer = pd.ExcelWriter(path+"\\merging_file.xlsx", engine='xlsxwriter')
+
+    for sheet, frame in frames.items():
+        df = pd.read_excel(frame)
+        df.to_excel(writer, sheet_name=sheet)
+    writer.save()
+    format_excel(path+"\\merging_file.xlsx")
+    
 
 def convert_csv():
     """
@@ -15,31 +34,35 @@ def convert_csv():
 
     :returns xlsx files
     """
-
     path = os.path.dirname(os.path.abspath(__file__))
-    files = glob.glob(path + "/*.csv")
+    dir_path = path + "\Cities"
+    files = glob.glob(dir_path + "\*.csv")
 
     for filename in files:
         df = pd.read_csv(filename)
-        date = os.path.splitext(os.path.basename(filename))[0] # this gets rid of the .csv in the filename
-        df.to_excel(date + '.xlsx')
+        city = os.path.splitext(os.path.basename(filename))[0] # this gets rid of the .csv in the filename
+        df.to_excel(dir_path+"\\"+city+".xlsx")
+        format_excel(dir_path+"\\"+city+".xlsx")
+        
 
 
-def format_excel():
+def format_excel(filename):
     """
     This function takes the newly converted files and formats the document making each header have a drop down menu
 
     :returns styled files
     """
+    xl = pd.ExcelFile(filename)
+    s = os.path.splitext(filename)
+    s = os.path.split(s[0])
 
-    path = os.path.dirname(os.path.abspath(__file__))
-    files = glob.glob(path + "/*.xlsx")
-
-    for filename in files:
+    if s[1] != 'merging_file':
         df = pd.read_excel(filename)
         df.drop(['Unnamed: 0'], axis=1, inplace=True)
+        
         writer = pd.ExcelWriter(filename, engine='xlsxwriter')
-        df.to_excel(writer, sheet_name='Sheet1', startrow=1, header=False, index=False)
+
+        df.to_excel(writer, startrow=1, header=False, index=False)
         worksheet = writer.sheets['Sheet1']
         (max_row, max_col) = df.shape
         column_settings = [{'header': column} for column in df.columns]
@@ -48,8 +71,24 @@ def format_excel():
         for i, col in enumerate(df.columns):
             column_len = max(df[col].astype(str).str.len().max(), len(col) + 2)
             worksheet.set_column(i, i, column_len)
-        writer.save()
+    else:
+        writer = pd.ExcelWriter('benchmarking.xlsx', engine='xlsxwriter')
 
+        for i in range(len(xl.sheet_names)):
+            df = pd.read_excel(xl, xl.sheet_names[i])
+            df.drop(['Unnamed: 0'], axis=1, inplace=True)
+            
+            df.to_excel(writer, sheet_name=xl.sheet_names[i], startrow=1, header=False, index=False)
+            worksheet = writer.sheets[xl.sheet_names[i]]
+            (max_row, max_col) = df.shape
+            column_settings = [{'header': column} for column in df.columns]
+            worksheet.add_table(0, 0, max_row, max_col - 1, {'columns': column_settings})
+            worksheet.set_column(0, max_col - 1, 12)
+            for i, col in enumerate(df.columns):
+                column_len = max(df[col].astype(str).str.len().max(), len(col) + 2)
+                worksheet.set_column(i, i, column_len)
+    writer.save()
+    
 
 def get_data_from_records():
     """This function reads the record.json file and returns a list of dictionaries
@@ -61,8 +100,6 @@ def get_data_from_records():
     with open('record.json', 'rt', encoding='UTF8') as f:
         list_of_entries = json.load(f)
     return list_of_entries
-
-
 
 
 def get_data_from_single_entry(single_entry):
@@ -92,6 +129,7 @@ def get_data_from_single_entry(single_entry):
             metric_value = eval(single_entry["metric_parse_code"])
         else:
             metric_value = "-"
+            
         if not single_entry["date_parse_code"].isdigit() and single_entry["date_parse_code"] != "":
             date_value = eval(single_entry["date_parse_code"])
         elif single_entry["date_parse_code"] == "":
@@ -133,18 +171,25 @@ def put_single_entry_in_csv(data_dict):
     Args:
         data_dict (dict): This is the dict returned by get_data_from_single_entry function
     """
+    
+    df = pd.DataFrame(data_dict, index=[])
+
+    path = os.path.dirname(os.path.abspath(__file__))
+    dir_path = path + "\Cities"
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
 
     filename = f"{data_dict['City']}.csv"
-    df = pd.DataFrame(data_dict, index=[])
-    if not path.exists(filename):
-        df.to_csv(filename, mode='w', header=True, index=False)
+    file_path = dir_path + "\\" + filename
+    if not os.path.exists(file_path):
+        df.to_csv(file_path, mode='w', header=True, index=False)
 
-    existing_data = pd.read_csv(filename)
+    existing_data = pd.read_csv(file_path)
     if len(existing_data) == 0:
         data_dict["Serial No."] = len(existing_data) + 1
         df = pd.DataFrame(data_dict, index=[])
         df = df.append(data_dict, ignore_index=True)
-        df.to_csv(filename, mode='a', header=False, index=False)
+        df.to_csv(file_path, mode='a', header=False, index=False)
         return
 
     for i in existing_data.index:
@@ -156,12 +201,12 @@ def put_single_entry_in_csv(data_dict):
             'Date']:  # if a existing_data has the same metric name and date as data_dict
             if existing_value != data_dict['Metric Value']:
                 existing_data.replace(existing_data['Metric Value'][i], data_dict['Metric Value'], inplace=True)
-                existing_data.to_csv(filename, index=False)
+                existing_data.to_csv(file_path, index=False)
             return
 
     data_dict["Serial No."] = len(existing_data) + 1
     existing_data = existing_data.append(data_dict, ignore_index=True)
-    existing_data.to_csv(filename, index=False)
+    existing_data.to_csv(file_path, index=False)
 
 
 if __name__ == "__main__":
@@ -171,7 +216,9 @@ if __name__ == "__main__":
         try:
             data_dict = get_data_from_single_entry(single_entry)
             put_single_entry_in_csv(data_dict)
-            convert_csv()
-            format_excel()
         except TypeError:
             pass
+    convert_csv()
+    merge_files()
+    os.remove("merging_file.xlsx")
+    
