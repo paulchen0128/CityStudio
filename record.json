@@ -9,15 +9,6 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/96e9989d-eca5-4e0b-824b-9789a39aea58/resource/1598f1b3-2312-4317-ac48-229dfc1cd298/download/indoor-ice-rinks-data.xlsx",
-        "metric_name": "Number of Ice link",
-        "city": "Toronto",
-        "metric_parse_code": "",
-        "date_parse_code": "",
-        "cov_dimension_id": "",
-        "cov_metric_name": ""
-    },
-    {
         "api_endpoint": "https://data.cityofnewyork.us/resource/yg3y-7juh.json?$limit=9999999",
         "metric_name": "% of unclean business",
         "city": "New York City",
@@ -226,33 +217,6 @@
         "cov_metric_name": ""
     },
     {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Light Duty Vehicles)",
-        "city": "Toronto",
-        "metric_parse_code": "float(data['Result'][168])",
-        "date_parse_code": "",
-        "cov_dimension_id": "",
-        "cov_metric_name": ""
-    },
-    {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Medium Duty Vehicles)",
-        "city": "Toronto",
-        "metric_parse_code": "float(data['Result'][169])",
-        "date_parse_code": "",
-        "cov_dimension_id": "",
-        "cov_metric_name": ""
-    },
-    {
-        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
-        "metric_name": "Total Litres of Fuel Consumed per 100 Km (Heavy Duty Vehicles)",
-        "city": "Toronto",
-        "metric_parse_code": "float(data['Result'][170])",
-        "date_parse_code": "",
-        "cov_dimension_id": "",
-        "cov_metric_name": ""
-    },
-    {
         "api_endpoint": " https://data.calgary.ca/resource/dpcu-jr23.json?$limit=999999",
         "metric_name": "Number of Water Main Breaks per 100 Km of Water Distribution Pipe",
         "city": "Calgary",
@@ -305,5 +269,14 @@
         "date_parse_code": "",
         "cov_dimension_id": "2038",
         "cov_metric_name": "Cultural competency training - Number of participants"
+    },
+    {
+        "api_endpoint": "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/570f61cd-0e5b-4bb1-a1c2-0a760e70c687?format=csv",
+        "metric_name": "data['Measure Name']",
+        "city": "Toronto",
+        "metric_parse_code": "data['Result']",
+        "date_parse_code": "",
+        "cov_dimension_id": "",
+        "cov_metric_name": ""
     }
 ]

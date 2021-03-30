@@ -124,11 +124,17 @@ def get_data_from_single_entry(single_entry):
             data = pd.read_excel(single_entry["api_endpoint"])
         else:
             raise ValueError
+
         # this part checks if the value is an empty string, if it is the parse code is not evaluated and an hyphen is assigned instead
         if single_entry["metric_parse_code"] != "":
             metric_value = eval(single_entry["metric_parse_code"])
         else:
             metric_value = "-"
+
+        if single_entry["metric_name"] != "" and "data[" in single_entry["metric_name"]:
+            metric_name = eval(single_entry["metric_name"])
+        else:
+            metric_name = single_entry["metric_name"]
             
         if not single_entry["date_parse_code"].isdigit() and single_entry["date_parse_code"] != "":
             date_value = eval(single_entry["date_parse_code"])
@@ -136,9 +142,10 @@ def get_data_from_single_entry(single_entry):
             date_value = "-"
         else:
             date_value = single_entry["date_parse_code"]
+
         return {'Serial No.': "",
                 # I left this value blank because I reassign the value of serial number in line 78, so it doesn't matter what is was initially
-                'Metric Name': single_entry["metric_name"],
+                'Metric Name': metric_name,
                 'City': single_entry["city"],
                 'Metric Value': metric_value,
                 'Date': date_value,
@@ -163,6 +170,41 @@ def get_data_from_single_entry(single_entry):
             logfile.write(log_data)
             print("API Endpoint Error:", err, single_entry["api_endpoint"])
 
+
+def make_dir_and_file(data_dict):
+    df = pd.DataFrame(data_dict, index=[])
+
+    path = os.path.dirname(os.path.abspath(__file__))
+    dir_path = path + "\Cities"
+
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    filename = f"{data_dict['City']}.csv"
+    file_path = dir_path + "\\" + filename
+    if not os.path.exists(file_path):
+        df.to_csv(file_path, mode='w', header=True, index=False)
+    
+    existing_data = pd.read_csv(file_path)
+    return existing_data, file_path
+ 
+
+def data_to_dict(serial_no, metric_name, city, metric_value, date, cov_dimension_id, cov_metric_name, api_endpoint):
+    to_dict = dict()
+
+    to_dict = {
+        "Serial No." : serial_no,
+        "Metric Name" : metric_name,
+        "City" : city,
+        "Metric Value" : metric_value,
+        "Date" : date,
+        "CoV Dimension ID" : cov_dimension_id,
+        "CoV Metric Name" : cov_metric_name,
+        "API Endpoint" : api_endpoint
+    }
+    return to_dict
+
+
 def put_single_entry_in_csv(data_dict):
     """This function takes the dictionary generated in the get_data_from_single_entry function and puts in a csv file of the city.
        If the csv file doesn't exist, it creates one with a header. The keys in the data_dict are filled in as a header. If the file
@@ -172,42 +214,63 @@ def put_single_entry_in_csv(data_dict):
         data_dict (dict): This is the dict returned by get_data_from_single_entry function
     """
     
-    df = pd.DataFrame(data_dict, index=[])
+    existing_data, file_path = make_dir_and_file(data_dict)
 
-    path = os.path.dirname(os.path.abspath(__file__))
-    dir_path = path + "\Cities"
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-
-    filename = f"{data_dict['City']}.csv"
-    file_path = dir_path + "\\" + filename
-    if not os.path.exists(file_path):
-        df.to_csv(file_path, mode='w', header=True, index=False)
-
-    existing_data = pd.read_csv(file_path)
-    if len(existing_data) == 0:
-        data_dict["Serial No."] = len(existing_data) + 1
-        df = pd.DataFrame(data_dict, index=[])
-        df = df.append(data_dict, ignore_index=True)
-        df.to_csv(file_path, mode='a', header=False, index=False)
-        return
-
-    for i in existing_data.index:
-        existing_metric_name = existing_data['Metric Name'][i]
-        existing_date = str(existing_data['Date'][i])
-        existing_value = existing_data['Metric Value'][i]
-
-        if existing_metric_name == data_dict['Metric Name'] and existing_date == data_dict[
-            'Date']:  # if a existing_data has the same metric name and date as data_dict
-            if existing_value != data_dict['Metric Value']:
-                existing_data.replace(existing_data['Metric Value'][i], data_dict['Metric Value'], inplace=True)
-                existing_data.to_csv(file_path, index=False)
+    if type(data_dict["Metric Name"]) is str:
+        if len(existing_data) == 0:
+            data_dict["Serial No."] = len(existing_data) + 1
+            df = pd.DataFrame(data_dict, index=[])
+            df = df.append(data_dict, ignore_index=True)
+            df.to_csv(file_path, mode='a', header=False, index=False)
             return
 
-    data_dict["Serial No."] = len(existing_data) + 1
-    existing_data = existing_data.append(data_dict, ignore_index=True)
-    existing_data.to_csv(file_path, index=False)
+        for i in existing_data.index:
+            existing_metric_name = existing_data['Metric Name'][i]
+            existing_date = str(existing_data['Date'][i])
+            existing_value = existing_data['Metric Value'][i]
 
+            if existing_metric_name == data_dict['Metric Name'] and existing_date == data_dict[
+                'Date']:  # if a existing_data has the same metric name and date as data_dict
+                if existing_value != data_dict['Metric Value']:
+                    existing_data.replace(existing_data['Metric Value'][i], data_dict['Metric Value'], inplace=True)
+                    existing_data.to_csv(file_path, index=False)
+                return
+
+        data_dict["Serial No."] = len(existing_data) + 1
+        existing_data = existing_data.append(data_dict, ignore_index=True)
+        existing_data.to_csv(file_path, index=False)
+    else:
+        if len(existing_data) == 0:
+            serial_no = 1
+            for i in range(len(data_dict["Metric Name"])):
+                dict_format = data_to_dict(serial_no, data_dict["Metric Name"][i], data_dict["City"], data_dict["Metric Value"][i], data_dict["Date"], data_dict["CoV Dimension ID"], data_dict["CoV Metric Name"], data_dict["API Endpoint"])
+                df = pd.DataFrame(dict_format, index=[])
+                df = df.append(dict_format, ignore_index=True)
+                df.to_csv(file_path, mode='a', header=False, index=False)
+                serial_no = serial_no + 1
+            return
+
+        for i in existing_data.index:
+            existing_metric_name = existing_data['Metric Name'][i]
+            existing_date = str(existing_data['Date'][i])
+            existing_value = existing_data['Metric Value'][i]
+            # Update data_dict["Metric Name"] and ["Metric Value"]
+            for i in range(len(data_dict["Metric Name"])):
+                if existing_metric_name == data_dict['Metric Name'][i] and existing_date == data_dict[
+                    'Date']:  # if a existing_data has the same metric name and date as data_dict
+                    if existing_value != data_dict['Metric Value'][i]:
+                        existing_data.replace(existing_data['Metric Value'][i], data_dict['Metric Value'][i], inplace=True)
+                        existing_data.to_csv(file_path, index=False)
+                    return
+
+        serial_no = len(existing_data) + 1
+
+        for i in range(len(data_dict["Metric Name"])): 
+            dict_format = data_to_dict(serial_no, data_dict["Metric Name"][i], data_dict["City"], data_dict["Metric Value"][i], data_dict["Date"], data_dict["CoV Dimension ID"], data_dict["CoV Metric Name"], data_dict["API Endpoint"])
+            existing_data = existing_data.append(dict_format, ignore_index=True)
+            existing_data.to_csv(file_path, index=False)
+            serial_no = serial_no + 1
+    
 
 if __name__ == "__main__":
     list_of_entries = get_data_from_records()
