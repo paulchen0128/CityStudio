@@ -2,7 +2,7 @@ import pytest
 import json
 import urllib.request
 from unittest.mock import mock_open, patch
-from app import get_data_from_records, get_data_from_single_entry, put_single_entry_in_csv
+from app import *
 
 @pytest.fixture
 def mock_single_entry_one():
@@ -88,3 +88,14 @@ def test_stdout_invalid_api(mock_invalid_api, capfd):
 def test_type_get_data_from_single_entry(mock_single_entry_one):
     """020D test data type of the output"""
     assert type(get_data_from_single_entry(mock_single_entry_one)) == dict
+
+def test_convert_csv():
+    """test that output of function returns xlsx"""
+    convert_csv()
+    assert path.isfile('Cities/test.xlsx') == True
+    if os.path.isfile('Cities/test.xlsx') == True:
+        os.remove('Cities/test.xlsx')
+
+def test_cities_exist():
+    """test that cities directory exists"""
+    assert path.isdir('Cities') == True
